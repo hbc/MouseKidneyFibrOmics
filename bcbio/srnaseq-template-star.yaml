@@ -1,0 +1,12 @@
+upload:
+  dir: ../final
+details:
+  - analysis: smallRNA-seq
+    algorithm:
+      aligner: star
+      # change adapter according project
+      adapters: ["TGGAATTCTCGGGTGC"] 
+      trim_reads: true
+      species: mmu
+      expression_caller: [trna, seqcluster]
+    genome_build: mm10

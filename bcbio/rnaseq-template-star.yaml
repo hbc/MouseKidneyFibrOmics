@@ -1,0 +1,11 @@
+# Template for human RNA-seq using Illumina prepared samples
+---
+details:
+  - analysis: RNA-seq
+    genome_build: mm10
+    algorithm:
+      aligner: star
+      adapters: [truseq, polya]
+      strandedness: unstranded 
+upload:
+  dir: ../final
