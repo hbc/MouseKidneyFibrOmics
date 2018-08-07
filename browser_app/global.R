@@ -20,3 +20,8 @@ possible_genes <- c(
     row.names(experiments(uuo)[["gene"]]),
     row.names(experiments(uuo)[["protein"]])
 ) %>% as.character() %>% unique()
+
+possible_mirnas <- c(
+    row.names(experiments(fa)[["mirna"]]),
+    row.names(experiments(uuo)[["mirna"]])
+) %>% as.character() %>% unique()

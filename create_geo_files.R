@@ -26,7 +26,15 @@ for(c in colnames(counts)){
     counts[,c, drop = FALSE] %>% 
         as.data.frame %>% 
         rownames_to_column("gene") %>% 
-        write_csv(file.path("geo", paste0(c, ".tsv")))
+        write_csv(file.path("geo", paste0(c, "_uuo.tsv")))
+}
+
+counts = experiments(obj[["fa"]])[["protein"]]
+for(c in colnames(counts)){
+    counts[,c, drop = FALSE] %>% 
+        as.data.frame %>% 
+        rownames_to_column("gene") %>% 
+        write_csv(file.path("geo", paste0(c, "_fa.tsv")))
 }
 
 lapply(list.files("geo", full.names = T, pattern = "tsv"), function(fn){

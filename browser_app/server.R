@@ -4,6 +4,10 @@ shinyServer(function(input, output, session) {
                          choices  = possible_genes,
                          selected = "ENSMUSG00000026193_Fn1",
                          server = TRUE)
+    updateSelectizeInput(session, "mirna",
+                         choices  = possible_mirnas,
+                         selected = "mmu-miR-192-5p",
+                         server = TRUE)
     
     datasetInput <- reactive({
         gene <- input$gene
@@ -112,8 +116,8 @@ shinyServer(function(input, output, session) {
         df = datasetInput()
         bind_rows(df[["fa"]], df[["uuo"]]) %>%
             ggplot(aes(day, zscore, color = molecule, group = molecule)) +
-            geom_point() +
-            geom_line() +
+            geom_point(size = 3) +
+            geom_line(size = 2) +
             # geom_smooth(method = "lm",formula = y~poly(x,3),
                                        # alpha=0.2, se = FALSE) +
             theme_bw() +
