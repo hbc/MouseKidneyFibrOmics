@@ -1,7 +1,7 @@
 library(EnsDb.Mmusculus.v79)
 library(MultiAssayExperiment)
 library(tidyverse)
-load("../data/me.rda")
+load("data/me.rda")
 
 fa = obj[["fa"]]
 uuo = obj[["uuo"]]

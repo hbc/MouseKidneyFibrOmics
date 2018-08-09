@@ -5,7 +5,7 @@ library(isomiRs)
 root = "."
 
 # FA model
-order_group=c("normal", "day1", "day2", "day3", "day7", "day14")
+order_group=c("day0", "day1", "day2", "day3", "day7", "day14")
 mrna_path = "tables/fa/results/counts/vst.csv.gz"
 mrna_matrix = read_csv(mrna_path)[,c(1, 17:19, 2:4, 8:16, 5:7)] %>% 
     .[,c(1:8,10:19)] %>% 
@@ -14,13 +14,14 @@ mrna_matrix = read_csv(mrna_path)[,c(1, 17:19, 2:4, 8:16, 5:7)] %>%
     as.matrix()
 mrna_col = data.frame(row.names=colnames(mrna_matrix), samples=colnames(mrna_matrix)) %>%
     separate(samples, into = c("day"), extra = "drop", sep = "_") %>%
+    mutate(day=ifelse(day=="normal", "day0", day)) %>% 
     mutate(day=factor(day, levels=order_group))
 rownames(mrna_col) = colnames(mrna_matrix)
 
 prot_path = "tables/pfa/results/counts/fa_model_log2_counts.csv"
 prot_matrix =  read_csv(prot_path) %>% 
     clean_names() %>% 
-    set_names(gsub("control", "normal", colnames(.[]))) %>% 
+    set_names(gsub("control", "day0", colnames(.[]))) %>% 
     group_by(id) %>% 
     summarise_all(funs(sum)) %>%
     ungroup() %>% 
@@ -29,6 +30,7 @@ prot_matrix =  read_csv(prot_path) %>%
     as.matrix()
 prot_col =  data.frame(row.names=colnames(prot_matrix), samples=colnames(prot_matrix)) %>%
     separate(samples, into = c("day"), extra = "drop", sep = "_") %>%
+    mutate(day=ifelse(day=="normal", "day0", day)) %>% 
     mutate(day=factor(day, levels=order_group))
 rownames(prot_col) = colnames(prot_matrix)
 
@@ -40,14 +42,15 @@ mirna_matrix =   read_csv(mirna_path)[,c(1, 6:8, 2, 9:10, 3:4, 11, 5, 12:13 )] %
     as.matrix()
 mirna_col =  data.frame(row.names=colnames(mirna_matrix), samples=colnames(mirna_matrix)) %>%
     mutate(day=gsub(".*_", "", samples)) %>%
+    mutate(day=ifelse(day=="normal", "day0", day)) %>% 
     mutate(day=factor(day, levels=order_group)) %>% 
     .[,c("day"), drop = FALSE]
 rownames(mirna_col) = colnames(mirna_matrix)
 
 library(org.Mm.eg.db)
 library(targetscan.Mm.eg.db)
-clean_mir = DEGreport::degFilter(mirna_matrix, mirna_col, "day", min = 1, minreads = 7)
-clean_mrna = DEGreport::degFilter(mrna_matrix, mrna_col, "day", min = 1, minreads = 7)
+clean_mir = DEGreport::degFilter(mirna_matrix, mirna_col, "day", min = 1, minreads = 5)
+clean_mrna = DEGreport::degFilter(mrna_matrix, mrna_col, "day", min = 1, minreads = 5)
 pairs = mirna2targetscan(mirna = rownames(clean_mir), species = "mmu", org = org.Mm.eg.db, keytype = "ENSEMBL")
 targets = findTargets(SummarizedExperiment(assays = SimpleList(norm = clean_mir),
                                            colData = mirna_col,
@@ -82,7 +85,7 @@ fa_model = MultiAssayExperiment(experiments = fa_exp,
 )
 
 # UUO model
-order_group=c("normal", "day1", "day2", "day3", "day7", "day14")
+order_group=c("day0", "day1", "day2", "day3", "day7", "day14")
 mrna_path = "tables/uuo/results/counts/vst.csv.gz"
 mrna_matrix = read_csv(mrna_path)[,c(1, 14:16,  6:9, 10:13, 2:5)] %>% 
     as.data.frame() %>% 
@@ -90,6 +93,7 @@ mrna_matrix = read_csv(mrna_path)[,c(1, 14:16,  6:9, 10:13, 2:5)] %>%
     as.matrix()
 mrna_col = data.frame(row.names=colnames(mrna_matrix), samples=colnames(mrna_matrix)) %>%
     separate(samples, into = c("day"), extra = "drop", sep = "_") %>%
+    mutate(day=ifelse(day=="normal", "day0", day)) %>% 
     mutate(day=factor(day, levels=order_group))
 rownames(mrna_col) = colnames(mrna_matrix)
 
@@ -105,6 +109,7 @@ prot_matrix =  read_csv(prot_path) %>%
     as.matrix()
 prot_col =  data.frame(row.names=colnames(prot_matrix), samples=colnames(prot_matrix)) %>%
     separate(samples, into = c("day"), extra = "drop", sep = "_") %>%
+    mutate(day=ifelse(day=="normal", "day0", day)) %>% 
     mutate(day=factor(day, levels=order_group))
 rownames(prot_col) = colnames(prot_matrix)
 
@@ -116,14 +121,15 @@ mirna_matrix =   read_csv(mirna_path)[,c(1, 14:16, 6:9, 10:13, 2:5)] %>%
     as.matrix()
 mirna_col =  data.frame(row.names=colnames(mirna_matrix), samples=colnames(mirna_matrix)) %>%
     separate(samples, into = c("day"), extra = "drop", sep = "_") %>%
+    mutate(day=ifelse(day=="normal", "day0", day)) %>% 
     mutate(day=factor(day, levels=order_group)) %>% 
     .[,c("day"), drop = FALSE]
 rownames(mirna_col) = colnames(mirna_matrix)
 
 library(org.Mm.eg.db)
 library(targetscan.Mm.eg.db)
-clean_mir = DEGreport::degFilter(mirna_matrix, mirna_col, "day", min = 1, minreads = 7)
-clean_mrna = DEGreport::degFilter(mrna_matrix, mrna_col, "day", min = 1, minreads = 7)
+clean_mir = DEGreport::degFilter(mirna_matrix, mirna_col, "day", min = 1, minreads = 5)
+clean_mrna = DEGreport::degFilter(mrna_matrix, mrna_col, "day", min = 1, minreads = 5)
 pairs = mirna2targetscan(mirna = rownames(clean_mir), species = "mmu", org = org.Mm.eg.db, keytype = "ENSEMBL")
 targets = findTargets(SummarizedExperiment(assays = SimpleList(norm = clean_mir),
                                            colData = mirna_col,
@@ -161,4 +167,4 @@ uuo_model = MultiAssayExperiment(experiments = uuo_exp,
 
 obj = list(fa=fa_model, uuo=uuo_model)
 
-save(obj, file=file.path("../data", "me.rda"))
+save(obj, file=file.path("data", "me.rda"))

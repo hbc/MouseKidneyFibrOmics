@@ -2,11 +2,11 @@
 shinyServer(function(input, output, session) {
     updateSelectizeInput(session, "gene",
                          choices  = possible_genes,
-                         selected = "ENSMUSG00000026193_Fn1",
+                         selected = "ENSMUSG00000000420_Galnt1",
                          server = TRUE)
     updateSelectizeInput(session, "mirna",
                          choices  = possible_mirnas,
-                         selected = "mmu-miR-192-5p",
+                         selected = "mmu-miR-27b-5p",
                          server = TRUE)
     
     datasetInput <- reactive({
@@ -26,7 +26,7 @@ shinyServer(function(input, output, session) {
                 rownames_to_column("feature")
             fa_g = gather(fa_g, "sample", "expression", -feature) %>%
                 left_join(cfa, by = "sample") %>%
-                mutate(molecule = "transcript", model = "FA")
+                mutate(molecule = "mRNA", model = "FA")
         }
         if (gene %in% rownames(experiments(fa)[["protein"]])){
             fa_p = experiments(fa)[["protein"]][gene,,drop = F] %>%
@@ -52,7 +52,7 @@ shinyServer(function(input, output, session) {
                 rownames_to_column("feature")
             uuo_g = gather(uuo_g, "sample", "expression", -feature) %>%
                 left_join(cuuo, by = "sample") %>%
-                mutate(molecule = "transcript", model = "UUO")
+                mutate(molecule = "mRNA", model = "UUO")
         }
         if (gene %in% rownames(experiments(uuo)[["protein"]])){
             uuo_p = experiments(uuo)[["protein"]][gene,,drop = F] %>%
@@ -120,8 +120,14 @@ shinyServer(function(input, output, session) {
             geom_line(size = 2) +
             # geom_smooth(method = "lm",formula = y~poly(x,3),
                                        # alpha=0.2, se = FALSE) +
-            theme_bw() +
+            theme_bw(base_size = 16) +
             facet_wrap(~model, nrow = 2)
 
     })
 })
+
+# 
+# Replace normal with day0
+# Replace transcript with mRNA
+# Maybe put ensemble number in brackets behind the gene name
+# 
