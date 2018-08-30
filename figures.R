@@ -7,15 +7,15 @@ library(EnsDb.Mmusculus.v79)
 library(cowplot)
 library(ggrepel)
 theme_set(
-    theme_light(base_size = 9L))
+    theme_light(base_size = 12L))
 theme_update(
     legend.justification = "center",
     legend.position = "bottom")
 
 
-uuo_cols = RColorBrewer::brewer.pal(8, "Set2")[c(1,4,5,6)]
-fa_cols = RColorBrewer::brewer.pal(8, "Set2")[c(1,2,3,5,6)]
-fa_mirna_cols = RColorBrewer::brewer.pal(8, "Set2")[c(1,5,6)]
+uuo_cols = RColorBrewer::brewer.pal(8, "Dark2")[c(1,4,5,6)]
+fa_cols = RColorBrewer::brewer.pal(8, "Dark2")[c(1,2,3,5,6)]
+fa_mirna_cols = RColorBrewer::brewer.pal(8, "Dark2")[c(1,5,6)]
 
 # > ·         For fibrosis aSMA=acta2; col1a1, fn1
 # > ·         For kidney injury: ngal=lcn2, kim-1, clusterin
@@ -28,30 +28,30 @@ coldfa = colData(obj$fa) %>% as.data.frame() %>%
     rownames_to_column("sample")
 
 plot_grid(
-    degPCA(experiments(obj$uuo)[["gene"]],
-           colData(obj$uuo)[colnames(experiments(obj$uuo)[["gene"]]),,drop=F],
-           "day") +
-        geom_text_repel(aes(label=day)) + 
-        scale_color_manual("", guide = FALSE, values = uuo_cols) +
-        ggtitle("A) UUO mRNA"),
-    degPCA(experiments(obj$uuo)[["protein"]],
-           colData(obj$uuo)[colnames(experiments(obj$uuo)[["protein"]]),,drop=F],
-           "day") +
-        geom_text_repel(aes(label=day)) + 
-        scale_color_manual("", guide = FALSE, values = uuo_cols) +
-        ggtitle("B) UUO protein"),
-    degPCA(experiments(obj$fa)[["protein"]],
-           colData(obj$fa)[colnames(experiments(obj$fa)[["protein"]]),,drop=F],
-           "day") +
-        geom_text_repel(aes(label=day)) + 
-        scale_color_manual("", guide = FALSE, values = fa_cols) +
-        ggtitle("C) FA protein"),
     degPCA(experiments(obj$uuo)[["mirna"]],
            colData(obj$uuo)[colnames(experiments(obj$uuo)[["mirna"]]),,drop=F],
            "day") +
         geom_text_repel(aes(label=day)) + 
         scale_color_manual("", guide = FALSE, values = uuo_cols) +
-        ggtitle("D) UUO miRNA")
+        ggtitle("A) UUO miRNA"),
+    degPCA(experiments(obj$uuo)[["gene"]],
+           colData(obj$uuo)[colnames(experiments(obj$uuo)[["gene"]]),,drop=F],
+           "day") +
+        geom_text_repel(aes(label=day)) + 
+        scale_color_manual("", guide = FALSE, values = uuo_cols) +
+        ggtitle("B) UUO mRNA"),
+    degPCA(experiments(obj$uuo)[["protein"]],
+           colData(obj$uuo)[colnames(experiments(obj$uuo)[["protein"]]),,drop=F],
+           "day") +
+        geom_text_repel(aes(label=day)) + 
+        scale_color_manual("", guide = FALSE, values = uuo_cols) +
+        ggtitle("C) UUO protein"),
+    degPCA(experiments(obj$fa)[["protein"]],
+           colData(obj$fa)[colnames(experiments(obj$fa)[["protein"]]),,drop=F],
+           "day") +
+        geom_text_repel(aes(label=day)) + 
+        scale_color_manual("", guide = FALSE, values = fa_cols) +
+        ggtitle("D) FA protein")
 ) + ggsave("figures/uuo-pca.pdf", width = 9, height = 9)
 
 
