@@ -33,25 +33,25 @@ plot_grid(
            "day") +
         geom_text_repel(aes(label=day)) + 
         scale_color_manual("", guide = FALSE, values = uuo_cols) +
-        ggtitle("A) UUO miRNA"),
+        ggtitle("a) UUO miRNA"),
     degPCA(experiments(obj$uuo)[["gene"]],
            colData(obj$uuo)[colnames(experiments(obj$uuo)[["gene"]]),,drop=F],
            "day") +
         geom_text_repel(aes(label=day)) + 
         scale_color_manual("", guide = FALSE, values = uuo_cols) +
-        ggtitle("B) UUO mRNA"),
+        ggtitle("b) UUO mRNA"),
     degPCA(experiments(obj$uuo)[["protein"]],
            colData(obj$uuo)[colnames(experiments(obj$uuo)[["protein"]]),,drop=F],
            "day") +
         geom_text_repel(aes(label=day)) + 
         scale_color_manual("", guide = FALSE, values = uuo_cols) +
-        ggtitle("C) UUO protein"),
+        ggtitle("c) UUO protein"),
     degPCA(experiments(obj$fa)[["protein"]],
            colData(obj$fa)[colnames(experiments(obj$fa)[["protein"]]),,drop=F],
            "day") +
         geom_text_repel(aes(label=day)) + 
         scale_color_manual("", guide = FALSE, values = fa_cols) +
-        ggtitle("D) FA protein")
+        ggtitle("d) FA protein")
 ) + ggsave("figures/uuo-pca.pdf", width = 9, height = 9)
 
 
@@ -62,18 +62,18 @@ fa_mirna = experiments(obj$fa)[["mirna"]]
 fa_cd_mirna = colData(obj$fa)[colnames(experiments(obj$fa)[["mirna"]]),,drop=F]
 keep_mirna = fa_cd_mirna$day != "day3"
 plot_grid(
-    degPCA(fa_gene[,keep_gene],
-           fa_cd[keep_gene,,drop=FALSE],
-           "day") +
-        geom_text_repel(aes(label=day)) + 
-        scale_color_manual("", guide = FALSE, values = fa_cols) +
-        ggtitle("B) FA mRNA"),
     degPCA(fa_mirna[, keep_mirna],
            fa_cd_mirna[keep_mirna,,drop=FALSE],
            "day") +
         geom_text_repel(aes(label=day)) + 
         scale_color_manual("", guide = FALSE, values = fa_mirna_cols) +
-        ggtitle("A) FA miRNA")
+        ggtitle("a) FA miRNA"),
+    degPCA(fa_gene[,keep_gene],
+           fa_cd[keep_gene,,drop=FALSE],
+           "day") +
+        geom_text_repel(aes(label=day)) + 
+        scale_color_manual("", guide = FALSE, values = fa_cols) +
+        ggtitle("b) FA mRNA")
 ) + ggsave("figures/fa_pca.pdf", width = 9, height = 5)
 
 
@@ -146,7 +146,7 @@ plot_grid(
         scale_linetype_manual(guide = FALSE, values = c(1,3,6)) +
         geom_smooth(se = FALSE)  +
         ylab("log2 normalized counts") +
-        ggtitle("A) fibrosis markers"),
+        ggtitle("a) fibrosis markers"),
     ggplot(dplyr::filter(df, marker == "injury"),
            aes(x = day, y = value,
                color = SYMBOL, group = group,
@@ -156,7 +156,7 @@ plot_grid(
         scale_linetype_manual(guide = FALSE, values = c(1,3,6)) +
         geom_smooth(se = FALSE)  +
         ylab("log2 normalized counts") +
-        ggtitle("B) injury markers"),
+        ggtitle("b) injury markers"),
     ggplot(dplyr::filter(df, marker == "house-keeping"),
            aes(x = day, y = value,
                color = SYMBOL, group = group,
@@ -166,7 +166,7 @@ plot_grid(
         scale_linetype_manual(guide = FALSE, values = c(1,3,6)) +
         geom_smooth(se = FALSE)  +
         ylab("log2 normalized counts") +
-        ggtitle("C) house-keeping markers"),
+        ggtitle("c) house-keeping markers"),
     experiments(obj$uuo)[["mirna"]][c("mmu-miR-21a-5p",
                                       "mmu-miR-192-5p"),,drop=F] %>%
         reshape::melt() %>% 
@@ -176,7 +176,7 @@ plot_grid(
         scale_color_brewer("", palette = "Set2") +
         geom_smooth(se = FALSE) +
         ylab("log2 normalized counts") +
-        ggtitle("D) miRNA fibrosis markers")
+        ggtitle("d) miRNA fibrosis markers")
     
 ) + ggsave("figures/markers.pdf", width = 11, height = 9)
 
@@ -208,7 +208,7 @@ plot_grid(
         scale_linetype_manual(guide = FALSE, values = c(1,3,6)) +
         geom_smooth(se = FALSE)  +
         ylab("log2 normalized counts") +
-        ggtitle("A) fibrosis markers"),
+        ggtitle("a) fibrosis markers"),
     ggplot(dplyr::filter(df, marker == "injury"),
            aes(x = day, y = value,
                color = SYMBOL, group = SYMBOL,
@@ -218,7 +218,7 @@ plot_grid(
         scale_linetype_manual(guide = FALSE, values = c(1,3,6)) +
         geom_smooth(se = FALSE)  +
         ylab("log2 normalized counts") +
-        ggtitle("B) injury markers"),
+        ggtitle("b) injury markers"),
     ggplot(dplyr::filter(df, marker == "house-keeping"),
            aes(x = day, y = value,
                color = SYMBOL, group = SYMBOL,
@@ -228,7 +228,7 @@ plot_grid(
         scale_linetype_manual(guide = FALSE, values = c(1,3,6)) +
         geom_smooth(se = FALSE)  +
         ylab("log2 normalized counts") +
-        ggtitle("C) house-keeping markers"),
+        ggtitle("c) house-keeping markers"),
     fa_mirna[c("mmu-miR-21a-5p",
                                       "mmu-miR-192-5p"),keep_mirna,drop=F] %>%
         reshape::melt() %>% 
@@ -238,7 +238,7 @@ plot_grid(
         scale_color_brewer("", palette = "Set2") +
         geom_smooth(se = FALSE) +
         ylab("log2 normalized counts") +
-        ggtitle("D) miRNA fibrosis markers")
+        ggtitle("d) miRNA fibrosis markers")
     
 ) + ggsave("figures/fa_markers.pdf", width = 11, height = 9)
 
