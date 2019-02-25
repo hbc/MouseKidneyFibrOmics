@@ -3,3 +3,6 @@
 .Rproj.user
 *cache*
 .*
+*geo*
+*data*
+upload.R
